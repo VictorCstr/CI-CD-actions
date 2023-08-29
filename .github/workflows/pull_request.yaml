@@ -17,7 +17,7 @@ jobs:
        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock')}}
 
     - name: Install dependencies
-      run: yarn install
+      run: npm install
 
   unused:
    needs: install # Precisa rodar o Install antes desse Job
@@ -34,4 +34,4 @@ jobs:
        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock')}}
 
     - name: Run ts-prune
-      run: yarn ts-prune --error
+      run: npx ts-prune --error
