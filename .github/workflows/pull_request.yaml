@@ -35,3 +35,20 @@ jobs:
 
     - name: Run ts-prune
       run: npx ts-prune --error
+
+  runningtests: 
+    needs: install
+    name: Run unit tests
+    runs-on: ubuntu-latest 
+    steps: 
+     - name: Checkout
+       uses: actions/checkout@v3 #Dá acesso a maquina ao nosso projeto.
+
+     - name: Cache node_modules  # Para não precisar instalar toda vez
+       uses: actions/cache@v2
+       with: 
+        path: node_modules
+        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock')}}
+
+     - name: Run unit tests
+       run: npm test
