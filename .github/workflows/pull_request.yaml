@@ -1,0 +1,37 @@
+name: Pull Request
+
+on: [pull_request]
+
+jobs: 
+  install:  # O nome aqui é aleatório
+   name: Installing packages
+   runs-on: ubuntu-latest  # Define que será executado em uma maquina virtual para o job.
+   steps: 
+    - name: Checkout
+      uses: actions/checkout@v3 #Dá acesso a maquina ao nosso projeto.
+
+    - name: Cache node_modules  # Para não precisar instalar toda vez
+      uses: actions/cache@v2
+      with: 
+       path: node_modules
+       key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock')}}
+
+    - name: Install dependencies
+      run: yarn install
+
+  unused:
+   needs: install # Precisa rodar o Install antes desse Job
+   name: Find unused exports (Dead code)
+   runs-on: ubuntu-latest 
+   steps: 
+    - name: Checkout
+      uses: actions/checkout@v3 #Dá acesso a maquina ao nosso projeto.
+
+    - name: Cache node_modules  # Para não precisar instalar toda vez
+      uses: actions/cache@v2
+      with: 
+       path: node_modules
+       key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock')}}
+
+    - name: Run ts-prune
+      run: yarn ts-prune --error
